@@ -2,6 +2,18 @@
 
 A Model Context Protocol (MCP) server that provides secure file upload functionality to Amazon S3 with progress tracking and presigned URL generation.
 
+## 🚀 Quick Install
+
+```bash
+# Run directly with uvx (no installation required!)
+uvx mcp-s3 --root ~/mcp-uploads
+
+# Or install with pip
+pip install mcp-s3
+```
+
+**Available on PyPI**: [https://pypi.org/project/mcp-s3/](https://pypi.org/project/mcp-s3/)
+
 ## 🚀 Features
 
 - **Secure S3 Upload**: Upload files to AWS S3 with automatic UUID-based naming
@@ -10,8 +22,9 @@ A Model Context Protocol (MCP) server that provides secure file upload functiona
 - **Path Security**: Prevents directory traversal attacks with safe path joining
 - **Environment Configuration**: Supports both CLI arguments and `.env` file configuration
 - **FastMCP Integration**: Built with FastMCP framework for optimal MCP compatibility
+- **PyPI Published**: Install globally with `pip` or run directly with `uvx`
 - **Modern Python Support**: Full support for `uv` and `uvx` package managers
-- **Multiple Execution Methods**: Run with traditional Python, uv, uvx, or direct script execution
+- **Zero Installation Option**: Run directly from PyPI with `uvx` - no local installation needed
 
 ## 📋 Prerequisites
 
@@ -24,41 +37,42 @@ A Model Context Protocol (MCP) server that provides secure file upload functiona
 
 ### 1. Choose Your Installation Method
 
-#### Method 1: Using uv (Recommended)
+#### Method 1: Using uvx (Recommended - No Installation Required)
 ```bash
-# Install dependencies and run
-uv run python mcp_s3.py --root ~/mcp-uploads
-
-# Or install the package and use the script
-uv pip install -e .
-uv run mcp-s3 --root ~/mcp-uploads
-```
-
-#### Method 2: Using uvx (Isolated Environment)
-```bash
-# Run directly from current directory
-uvx --from . mcp-s3 --root ~/mcp-uploads
-
-# Or if published to PyPI
+# Run directly from PyPI (no installation needed!)
 uvx mcp-s3 --root ~/mcp-uploads
+
+# Run from local development directory
+uvx --from . mcp-s3 --root ~/mcp-uploads
 ```
 
-#### Method 3: Traditional Python
+#### Method 2: Using pip (Traditional Installation)
 ```bash
+# Install from PyPI
+pip install mcp-s3
+
+# Then run the installed command
+mcp-s3 --root ~/mcp-uploads
+```
+
+#### Method 3: Using uv
+```bash
+# Install and run with uv
+uv add mcp-s3
+uv run mcp-s3 --root ~/mcp-uploads
+
+# Or run development version
+uv run python mcp_s3.py --root ~/mcp-uploads
+```
+
+#### Method 4: Development/Local Python
+```bash
+# For development or local testing
+python mcp_s3.py --root ~/mcp-uploads
+
 # With conda environment
 conda activate your-env
 python mcp_s3.py --root ~/mcp-uploads
-
-# With pip/venv
-pip install -r requirements.txt
-python mcp_s3.py --root ~/mcp-uploads
-```
-
-#### Method 4: Direct Script Execution
-```bash
-# Make executable and run
-chmod +x mcp_s3.py
-./mcp_s3.py --root ~/mcp-uploads
 ```
 
 ### 2. Configure AWS Credentials
@@ -84,16 +98,17 @@ uv run python test_aws_connection.py
 
 ### 4. Run the MCP Server
 ```bash
-# Basic usage (recommended)
-uv run python mcp_s3.py --root ~/mcp-uploads
+# Recommended: Run directly from PyPI with uvx
+uvx mcp-s3 --root ~/mcp-uploads
 
 # With custom bucket
-uv run python mcp_s3.py --root ~/mcp-uploads --bucket my-custom-bucket
+uvx mcp-s3 --root ~/mcp-uploads --bucket my-custom-bucket
 
-# Using uvx for isolation
-uvx --from . mcp-s3 --root ~/mcp-uploads
+# Or install first, then run
+pip install mcp-s3
+mcp-s3 --root ~/mcp-uploads
 
-# Traditional Python
+# Development/local testing
 python mcp_s3.py --root ~/mcp-uploads
 ```
 
@@ -101,14 +116,14 @@ python mcp_s3.py --root ~/mcp-uploads
 
 ### Cursor IDE Setup
 
-#### Using uv (Recommended)
+#### Using uvx from PyPI (Recommended)
 Add this configuration to your `~/.cursor/mcp.json`:
 ```json
 {
   "mcpServers": {
     "mcp-s3": {
-      "command": "uv",
-      "args": ["run", "python", "/path/to/mcp_s3.py", "--root", "/path/to/uploads"],
+      "command": "uvx",
+      "args": ["mcp-s3", "--root", "/path/to/uploads"],
       "env": {
         "AWS_ACCESS_KEY_ID": "your_access_key",
         "AWS_SECRET_ACCESS_KEY": "your_secret_key",
@@ -120,16 +135,17 @@ Add this configuration to your `~/.cursor/mcp.json`:
 }
 ```
 
-#### Using uvx (Isolated Environment)
+#### Using pip install
 ```json
 {
   "mcpServers": {
     "mcp-s3": {
-      "command": "uvx",
-      "args": ["--from", "/path/to/project", "python", "mcp_s3.py", "--root", "/path/to/uploads"],
+      "command": "mcp-s3",
+      "args": ["--root", "/path/to/uploads"],
       "env": {
         "AWS_ACCESS_KEY_ID": "your_access_key",
         "AWS_SECRET_ACCESS_KEY": "your_secret_key",
+        "AWS_DEFAULT_REGION": "us-east-1",
         "S3_BUCKET_NAME": "your_bucket_name"
       }
     }
@@ -161,16 +177,29 @@ Add this configuration to your `~/.cursor/mcp.json`:
 ```
 
 ### Claude Desktop Setup
-Add to your Claude Desktop MCP configuration:
 
+#### Using uvx (Recommended)
 ```json
 {
   "mcpServers": {
-    "s3-uploader": {
-      "command": "python",
+    "mcp-s3": {
+      "command": "uvx",
       "args": [
-        "/path/to/mcp_s3.py",
-        "--bucket", "your-bucket-name",
+        "mcp-s3",
+        "--root", "/path/to/uploads"
+      ]
+    }
+  }
+}
+```
+
+#### Using pip install
+```json
+{
+  "mcpServers": {
+    "mcp-s3": {
+      "command": "mcp-s3",
+      "args": [
         "--root", "/path/to/uploads"
       ]
     }
@@ -336,12 +365,12 @@ This project is open source. Please ensure you comply with AWS terms of service 
 
 ## 📚 Additional Resources
 
+- **[PyPI Package](https://pypi.org/project/mcp-s3/)** - Official package on Python Package Index
 - [Model Context Protocol (MCP)](https://modelcontextprotocol.io/)
 - [FastMCP Framework](https://github.com/jlowin/fastmcp) | [Documentation](https://gofastmcp.com)
 - [UV Package Manager](https://github.com/astral-sh/uv) - Fast Python package installer
 - [AWS S3 Documentation](https://docs.aws.amazon.com/s3/)
 - [Cursor IDE](https://cursor.sh/)
-- [Detailed Usage Guide](./USAGE.md)
 - [AWS Setup Guide](./AWS_SETUP_GUIDE.md)
 
 ---
